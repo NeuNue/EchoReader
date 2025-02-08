@@ -1,0 +1,15 @@
+{
+    "categories": [
+        {
+            "id": "rain",
+            "name": "雨声",
+            "sounds": [
+                {
+                    "id": "rain1",
+                    "name": "小雨",
+                    "file": "rain/rain1.mp3"
+                }
+            ]
+        }
+    ]
+} 

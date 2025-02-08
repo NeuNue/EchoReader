@@ -1,0 +1,783 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --toc-bg: #f5f5f5;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    height: 95vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: var(--toc-bg);
+    border-radius: 5px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.font-size-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.reader-wrapper {
+    display: flex;
+    gap: 20px;
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    transition: padding-left 0.3s ease;
+}
+
+.reader-wrapper.has-panel {
+    padding-left: 270px;
+}
+
+.toc {
+    width: 250px;
+    background-color: var(--toc-bg);
+    padding: 15px;
+    border-radius: 5px;
+    height: calc(95vh - 140px);
+    overflow-y: auto;
+    position: absolute;
+    left: 0;
+    z-index: 100;
+}
+
+.toc.hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin: 2px 0;
+}
+
+.toc-item:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+}
+
+/* 子目录缩进 */
+.toc-item ul {
+    margin-left: 16px;
+    margin-top: 4px;
+}
+
+.toc-item ul .toc-item {
+    font-size: 0.95em;
+    padding: 6px 10px;
+}
+
+/* 深色模式适配 */
+body.theme-dark .toc-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #4a9eff;
+}
+
+#reader-container {
+    flex: 1;
+    height: calc(95vh - 140px);
+    border: none;
+    padding: 20px;
+    background-color: var(--bg-color);
+    overflow: auto;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+button, select {
+    padding: 8px 16px;
+    margin: 0 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+button:hover, select:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+#file-input {
+    margin-right: 10px;
+}
+
+/* 主题样式 */
+body.theme-dark {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --toc-bg: #2d2d2d;
+}
+
+/* 深色模式下的按钮和控件样式 */
+body.theme-dark button,
+body.theme-dark select,
+body.theme-dark input {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border-color: #444;
+}
+
+body.theme-dark button:hover {
+    background-color: #3d3d3d;
+}
+
+/* 深色模式下的其他元素样式调整 */
+body.theme-dark .bookmark-item,
+body.theme-dark .excerpt-item {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-dark .bookmark-progress-info,
+body.theme-dark .excerpt-progress-info,
+body.theme-dark .excerpt-comment-display {
+    color: #aaa;
+}
+
+body.theme-dark .selection-popup {
+    background: #2d2d2d;
+}
+
+body.theme-dark .selection-popup .add-excerpt-btn {
+    color: #ffffff;
+}
+
+body.theme-dark .selection-popup .add-excerpt-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body.theme-sepia {
+    --bg-color: #f4ecd8;
+    --text-color: #5b4636;
+    --toc-bg: #e8e0d0;
+}
+
+.error {
+    color: red;
+    padding: 20px;
+    text-align: center;
+}
+
+/* 添加进度条样式 */
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+#progress-bar {
+    flex: 1;
+    height: 8px;
+    -webkit-appearance: none;
+    background: #ddd;
+    border-radius: 4px;
+    outline: none;
+}
+
+#progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* 书签面板样式 */
+.bookmarks {
+    width: 250px;
+    background-color: var(--toc-bg);
+    padding: 15px;
+    border-radius: 5px;
+    height: calc(95vh - 140px);
+    overflow-y: auto;
+    position: absolute;
+    left: 0;
+    z-index: 100;
+}
+
+.bookmarks.hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.bookmark-item {
+    padding: 12px;
+    margin: 8px 0;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+}
+
+.bookmark-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+}
+
+.bookmark-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bookmark-progress-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.bookmark-progress-bar {
+    height: 4px;
+    background: #eee;
+    border-radius: 2px;
+    width: 100%;
+    margin: 4px 0;
+    overflow: hidden;
+}
+
+.bookmark-progress-bar-fill {
+    height: 100%;
+    background: #007bff;
+    transition: width 0.3s ease;
+}
+
+.bookmark-content {
+    font-size: 0.9em;
+    white-space: pre-line;
+    border-left: 3px solid #007bff;
+    padding-left: 8px;
+    margin-top: 4px;
+}
+
+.bookmark-delete {
+    padding: 4px 8px;
+    color: #ff4444;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 1.1em;
+}
+
+/* 添加书签面板头部样式 */
+.bookmarks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.bookmarks-header h3 {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.add-bookmark-btn {
+    padding: 4px 8px;
+    font-size: 0.9em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.add-bookmark-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 音频播放器悬浮窗样式 */
+.floating-audio-player {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    background: var(--toc-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.audio-player-header {
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border-radius: 8px 8px 0 0;
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.minimize-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 5px;
+}
+
+.audio-player-content {
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.audio-player-content.minimized {
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* 音频播放器控件样式 */
+.audio-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.audio-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.audio-btn:hover:not(:disabled) {
+    background: #0056b3;
+}
+
+.audio-btn .play-icon {
+    font-size: 14px;
+}
+
+#volume-slider {
+    width: 80px;
+    height: 4px;
+    -webkit-appearance: none;
+    background: #ddd;
+    border-radius: 2px;
+    outline: none;
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#volume-slider:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#audio-select {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* 保持现有的音频控件样式，但移除之前的 .audio-player 相关样式 */
+
+/* 摘录面板样式 */
+.excerpts-panel {
+    width: 250px;
+    background-color: var(--toc-bg);
+    padding: 15px;
+    border-radius: 5px;
+    height: calc(95vh - 140px);
+    overflow-y: auto;
+    position: absolute;
+    left: 0;
+    z-index: 100;
+}
+
+.excerpts-panel.hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.excerpts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.add-excerpt-btn {
+    padding: 4px 8px;
+    font-size: 0.9em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.excerpt-item {
+    padding: 12px;
+    margin: 8px 0;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+}
+
+.excerpt-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+}
+
+.excerpt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.excerpt-progress-info {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.excerpt-content {
+    font-size: 0.95em;
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+.excerpt-comment-display {
+    font-size: 0.9em;
+    color: #666;
+    border-left: 3px solid #007bff;
+    padding-left: 8px;
+    margin-top: 8px;
+}
+
+.excerpt-delete {
+    color: #ff4444;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1em;
+    padding: 2px 6px;
+}
+
+/* 选择文本弹出按钮样式 */
+.selection-popup {
+    position: fixed;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 4px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    pointer-events: auto;
+}
+
+.selection-popup.hidden {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+}
+
+.selection-popup .add-excerpt-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: none;
+    background: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 0.9em;
+    white-space: nowrap;
+    border-radius: 16px;
+    transition: background-color 0.2s;
+}
+
+.selection-popup .add-excerpt-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.excerpt-icon {
+    font-size: 1.1em;
+}
+
+/* 修改摘录对话框样式 */
+.excerpt-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.excerpt-dialog.hidden {
+    display: none;
+}
+
+.excerpt-dialog-content {
+    background: var(--bg-color);
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.dialog-header h4 {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.close-dialog {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #666;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.excerpt-text {
+    margin: 15px 0;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    line-height: 1.5;
+    font-size: 0.95em;
+    word-break: break-word;
+}
+
+.excerpt-comment {
+    width: 100%;
+    min-height: 100px;
+    margin: 10px 0;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    font-size: 0.95em;
+    line-height: 1.4;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.excerpt-dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.excerpt-dialog-buttons button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-excerpt {
+    background: #007bff;
+    color: white;
+    border: none;
+}
+
+.cancel-excerpt {
+    background: none;
+    border: 1px solid #ddd;
+}
+
+/* 摘录模式光标 */
+body.excerpting {
+    cursor: text;
+}
+
+/* 修改侧边面板基础样式 */
+.side-panel {
+    width: 250px;
+    background-color: var(--toc-bg);
+    padding: 15px;
+    border-radius: 8px;
+    height: calc(95vh - 140px);
+    overflow-y: auto;
+    position: absolute;
+    left: 0;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+}
+
+.side-panel.visible {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* 应用到各个面板 */
+.toc, .bookmarks, .excerpts-panel {
+    composes: side-panel;
+}
+
+/* 移除原有的 hidden 类使用 */
+.toc.hidden,
+.bookmarks.hidden,
+.excerpts-panel.hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+    /* 不使用 display: none，以保持动画效果 */
+    pointer-events: none;
+}
+
+/* 文件选择按钮和文件名样式 */
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.file-input-wrapper input[type="file"] {
+    display: none;
+}
+
+.file-input-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.file-input-label:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.file-icon {
+    font-size: 1.2em;
+}
+
+.file-name {
+    font-size: 1.1em;
+    color: var(--text-color);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+    padding: 4px 12px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+/* 深色模式适配 */
+body.theme-dark .file-name {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* 深色模式阴影调整 */
+body.theme-dark .header,
+body.theme-dark #reader-container,
+body.theme-dark .side-panel,
+body.theme-dark button,
+body.theme-dark select,
+body.theme-dark .bookmark-item,
+body.theme-dark .excerpt-item {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.theme-dark .excerpt-dialog-content {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+} 

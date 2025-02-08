@@ -1,0 +1,12 @@
+{
+  "name": "web-reader",
+  "version": "1.0.0",
+  "description": "Web EPUB/TXT Reader",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

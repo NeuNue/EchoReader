@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线阅读器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+    <script>
+        window.ePub = window.ePub || window.epub;
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="file-input-wrapper">
+                <input type="file" id="file-input" accept=".epub,.txt">
+                <label for="file-input" class="file-input-label">
+                    <span class="file-icon">📚</span>
+                    选择电子书
+                </label>
+                <span id="file-name" class="file-name"></span>
+            </div>
+            <div class="controls">
+                <button id="toc-toggle">目录</button>
+                <button id="bookmark-toggle">书签栏</button>
+                <button id="excerpt-toggle">摘录</button>
+                <div class="progress-container">
+                    <span id="progress-text">0%</span>
+                    <input type="range" id="progress-bar" min="0" max="100" value="0">
+                </div>
+                <select id="theme-select">
+                    <option value="light">浅色主题</option>
+                    <option value="dark">深色主题</option>
+                    <option value="sepia">护眼模式</option>
+                </select>
+                <div class="font-size-control">
+                    <button id="font-decrease">A-</button>
+                    <span id="font-size-display">100%</span>
+                    <button id="font-increase">A+</button>
+                </div>
+                <button id="prev-btn">上一页</button>
+                <button id="next-btn">下一页</button>
+            </div>
+        </div>
+        <div class="reader-wrapper">
+            <div id="toc" class="toc hidden"></div>
+            <div id="bookmarks" class="bookmarks hidden">
+                <div class="bookmarks-header">
+                    <h3>书签列表</h3>
+                    <button id="add-bookmark-btn" class="add-bookmark-btn">添加书签</button>
+                </div>
+                <div id="bookmark-list"></div>
+            </div>
+            <div id="reader-container"></div>
+        </div>
+    </div>
+    <script src="reader.js"></script>
+    <script src="audioPlayer.js"></script>
+    <script src="excerpts.js"></script>
+</body>
+</html> 
